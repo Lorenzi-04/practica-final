@@ -1,0 +1,162 @@
+<html>
+<head>
+<title>GestionProductos.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #f97bb0; font-weight: bold;}
+.s1 { color: #dfdfe0;}
+.s2 { color: #ff806c;}
+.s3 { color: #d7c781;}
+.s4 { color: #7f8c99;}
+</style>
+</head>
+<body bgcolor="#292a30">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GestionProductos.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">Almacen;</span>
+
+<span class="s0">import </span><span class="s1">javax.swing.*;</span>
+<span class="s0">import </span><span class="s1">javax.swing.table.DefaultTableModel;</span>
+<span class="s0">import </span><span class="s1">java.awt.*;</span>
+<span class="s0">import </span><span class="s1">java.awt.event.ActionEvent;</span>
+<span class="s0">import </span><span class="s1">java.awt.event.ActionListener;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList;</span>
+
+<span class="s0">class </span><span class="s1">Producto {</span>
+    <span class="s1">String nombre;</span>
+    <span class="s1">String marca;</span>
+    <span class="s1">String categoria;</span>
+    <span class="s0">double </span><span class="s1">precio;</span>
+    <span class="s0">int </span><span class="s1">cantidad;</span>
+
+    <span class="s0">public </span><span class="s1">Producto(String nombre, String marca, String categoria, </span><span class="s0">double </span><span class="s1">precio, </span><span class="s0">int </span><span class="s1">cantidad) {</span>
+        <span class="s0">this</span><span class="s1">.nombre = nombre;</span>
+        <span class="s0">this</span><span class="s1">.marca = marca;</span>
+        <span class="s0">this</span><span class="s1">.categoria = categoria;</span>
+        <span class="s0">this</span><span class="s1">.precio = precio;</span>
+        <span class="s0">this</span><span class="s1">.cantidad = cantidad;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+<span class="s0">public class </span><span class="s1">GestionProductos </span><span class="s0">extends </span><span class="s1">JFrame {</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;Producto&gt; productos = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;();</span>
+    <span class="s0">private </span><span class="s1">DefaultTableModel modeloTabla;</span>
+
+    <span class="s0">public </span><span class="s1">GestionProductos() {</span>
+        <span class="s1">setTitle(</span><span class="s2">&quot;Gestión de Productos&quot;</span><span class="s1">);</span>
+        <span class="s1">setSize(</span><span class="s3">600</span><span class="s1">, </span><span class="s3">400</span><span class="s1">);</span>
+        <span class="s1">setDefaultCloseOperation(EXIT_ON_CLOSE);</span>
+        <span class="s1">setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">);</span>
+
+        <span class="s1">modeloTabla = </span><span class="s0">new </span><span class="s1">DefaultTableModel(</span><span class="s0">new </span><span class="s1">String[]{</span><span class="s2">&quot;Nombre&quot;</span><span class="s1">, </span><span class="s2">&quot;Marca&quot;</span><span class="s1">, </span><span class="s2">&quot;Categoría&quot;</span><span class="s1">, </span><span class="s2">&quot;Precio&quot;</span><span class="s1">, </span><span class="s2">&quot;Cantidad&quot;</span><span class="s1">}, </span><span class="s3">0</span><span class="s1">);</span>
+        <span class="s1">JTable tablaProductos = </span><span class="s0">new </span><span class="s1">JTable(modeloTabla);</span>
+        <span class="s1">JScrollPane scrollPane = </span><span class="s0">new </span><span class="s1">JScrollPane(tablaProductos);</span>
+
+        <span class="s1">JButton btnNuevo = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s2">&quot;Nuevo&quot;</span><span class="s1">);</span>
+        <span class="s1">JButton btnEditar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s2">&quot;Editar&quot;</span><span class="s1">);</span>
+        <span class="s1">JButton btnEliminar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s2">&quot;Eliminar&quot;</span><span class="s1">);</span>
+        <span class="s1">JButton btnVolver = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s2">&quot;Volver&quot;</span><span class="s1">);</span>
+
+        <span class="s4">// Agregar ActionListeners a los botones</span>
+        <span class="s1">btnNuevo.addActionListener(e -&gt; mostrarFormulario(</span><span class="s0">null</span><span class="s1">));</span>
+        <span class="s1">btnEditar.addActionListener(e -&gt; {</span>
+            <span class="s0">int </span><span class="s1">filaSeleccionada = tablaProductos.getSelectedRow();</span>
+            <span class="s0">if </span><span class="s1">(filaSeleccionada != -</span><span class="s3">1</span><span class="s1">) {</span>
+                <span class="s1">mostrarFormulario(productos.get(filaSeleccionada));</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">, </span><span class="s2">&quot;Seleccione un producto para editar.&quot;</span><span class="s1">);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">btnEliminar.addActionListener(e -&gt; {</span>
+            <span class="s0">int </span><span class="s1">filaSeleccionada = tablaProductos.getSelectedRow();</span>
+            <span class="s0">if </span><span class="s1">(filaSeleccionada != -</span><span class="s3">1</span><span class="s1">) {</span>
+                <span class="s1">productos.remove(filaSeleccionada);</span>
+                <span class="s1">actualizarTabla();</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">, </span><span class="s2">&quot;Seleccione un producto para eliminar.&quot;</span><span class="s1">);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">btnVolver.addActionListener(e -&gt; {</span>
+            <span class="s4">// Implementar lógica para volver a la ventana anterior</span>
+            <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">, </span><span class="s2">&quot;Volver a la ventana anterior.&quot;</span><span class="s1">);</span>
+        <span class="s1">});</span>
+
+        <span class="s1">JPanel panelBotones = </span><span class="s0">new </span><span class="s1">JPanel();</span>
+        <span class="s1">panelBotones.add(btnNuevo);</span>
+        <span class="s1">panelBotones.add(btnEditar);</span>
+        <span class="s1">panelBotones.add(btnEliminar);</span>
+        <span class="s1">panelBotones.add(btnVolver);</span>
+
+        <span class="s1">add(scrollPane, BorderLayout.CENTER);</span>
+        <span class="s1">add(panelBotones, BorderLayout.SOUTH);</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">mostrarFormulario(Producto producto) {</span>
+        <span class="s1">JTextField txtNombre = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">15</span><span class="s1">);</span>
+        <span class="s1">JTextField txtMarca = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">15</span><span class="s1">);</span>
+        <span class="s1">JTextField txtCategoria = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">15</span><span class="s1">);</span>
+        <span class="s1">JTextField txtPrecio = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">15</span><span class="s1">);</span>
+        <span class="s1">JTextField txtCantidad = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">15</span><span class="s1">);</span>
+
+        <span class="s0">if </span><span class="s1">(producto != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">txtNombre.setText(producto.nombre);</span>
+            <span class="s1">txtMarca.setText(producto.marca);</span>
+            <span class="s1">txtCategoria.setText(producto.categoria);</span>
+            <span class="s1">txtPrecio.setText(String.valueOf(producto.precio));</span>
+            <span class="s1">txtCantidad.setText(String.valueOf(producto.cantidad));</span>
+        <span class="s1">}</span>
+
+        <span class="s1">JPanel panelFormulario = </span><span class="s0">new </span><span class="s1">JPanel(</span><span class="s0">new </span><span class="s1">GridLayout(</span><span class="s3">5</span><span class="s1">, </span><span class="s3">2</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(</span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s2">&quot;Nombre:&quot;</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(txtNombre);</span>
+        <span class="s1">panelFormulario.add(</span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s2">&quot;Marca:&quot;</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(txtMarca);</span>
+        <span class="s1">panelFormulario.add(</span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s2">&quot;Categoría:&quot;</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(txtCategoria);</span>
+        <span class="s1">panelFormulario.add(</span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s2">&quot;Precio:&quot;</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(txtPrecio);</span>
+        <span class="s1">panelFormulario.add(</span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s2">&quot;Cantidad:&quot;</span><span class="s1">));</span>
+        <span class="s1">panelFormulario.add(txtCantidad);</span>
+
+        <span class="s0">int </span><span class="s1">resultado = JOptionPane.showConfirmDialog(</span><span class="s0">this</span><span class="s1">, panelFormulario,</span>
+                <span class="s1">producto == </span><span class="s0">null </span><span class="s1">? </span><span class="s2">&quot;Agregar Producto&quot; </span><span class="s1">: </span><span class="s2">&quot;Editar Producto&quot;</span><span class="s1">,</span>
+                <span class="s1">JOptionPane.OK_CANCEL_OPTION);</span>
+
+        <span class="s0">if </span><span class="s1">(resultado == JOptionPane.OK_OPTION) {</span>
+            <span class="s0">if </span><span class="s1">(producto == </span><span class="s0">null</span><span class="s1">) {</span>
+                <span class="s4">// Agregar nuevo producto</span>
+                <span class="s1">productos.add(</span><span class="s0">new </span><span class="s1">Producto(</span>
+                        <span class="s1">txtNombre.getText(),</span>
+                        <span class="s1">txtMarca.getText(),</span>
+                        <span class="s1">txtCategoria.getText(),</span>
+                        <span class="s1">Double.parseDouble(txtPrecio.getText()),</span>
+                        <span class="s1">Integer.parseInt(txtCantidad.getText())</span>
+                <span class="s1">));</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s4">// Editar producto existente</span>
+                <span class="s1">producto.nombre = txtNombre.getText();</span>
+                <span class="s1">producto.marca = txtMarca.getText();</span>
+                <span class="s1">producto.categoria = txtCategoria.getText();</span>
+                <span class="s1">producto.precio = Double.parseDouble(txtPrecio.getText());</span>
+                <span class="s1">producto.cantidad = Integer.parseInt(txtCantidad.getText());</span>
+            <span class="s1">}</span>
+            <span class="s1">actualizarTabla();</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">actualizarTabla() {</span>
+        <span class="s1">modeloTabla.setRowCount(</span><span class="s3">0</span><span class="s1">);</span>
+        <span class="s0">for </span><span class="s1">(Producto p : productos) {</span>
+            <span class="s1">modeloTabla.addRow(</span><span class="s0">new </span><span class="s1">Object[]{p.nombre, p.marca, p.categoria, p.precio, p.cantidad});</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

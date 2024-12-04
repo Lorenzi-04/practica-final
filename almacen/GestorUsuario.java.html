@@ -1,0 +1,481 @@
+<html>
+<head>
+<title>GestorUsuario.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #f97bb0; font-weight: bold;}
+.s1 { color: #dfdfe0;}
+.s2 { color: #7f8c99;}
+.s3 { color: #d7c781;}
+.s4 { color: #ff806c;}
+</style>
+</head>
+<body bgcolor="#292a30">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GestorUsuario.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">Almacen;</span>
+
+<span class="s0">import </span><span class="s1">javax.swing.*;</span>
+<span class="s0">import </span><span class="s1">javax.swing.table.DefaultTableModel;</span>
+<span class="s0">import </span><span class="s1">java.awt.*;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList;</span>
+<span class="s0">import </span><span class="s1">java.util.List;</span>
+
+<span class="s0">class </span><span class="s1">Main {</span>
+    <span class="s2">// Clase Usuario</span>
+    <span class="s0">static class </span><span class="s1">Usuario {</span>
+        <span class="s0">private </span><span class="s1">String nombreUsuario;</span>
+        <span class="s0">private </span><span class="s1">String contrasena;</span>
+        <span class="s0">private </span><span class="s1">String nombre;</span>
+        <span class="s0">private </span><span class="s1">String apellido;</span>
+        <span class="s0">private </span><span class="s1">String telefono;</span>
+        <span class="s0">private </span><span class="s1">String correoElectronico;</span>
+
+        <span class="s0">public </span><span class="s1">Usuario(String nombreUsuario, String contrasena, String nombre, String apellido, String telefono, String correoElectronico) {</span>
+            <span class="s0">this</span><span class="s1">.nombreUsuario = nombreUsuario;</span>
+            <span class="s0">this</span><span class="s1">.contrasena = contrasena;</span>
+            <span class="s0">this</span><span class="s1">.nombre = nombre;</span>
+            <span class="s0">this</span><span class="s1">.apellido = apellido;</span>
+            <span class="s0">this</span><span class="s1">.telefono = telefono;</span>
+            <span class="s0">this</span><span class="s1">.correoElectronico = correoElectronico;</span>
+        <span class="s1">}</span>
+
+        <span class="s2">// Getters</span>
+        <span class="s0">public </span><span class="s1">String getNombreUsuario() { </span><span class="s0">return </span><span class="s1">nombreUsuario; }</span>
+        <span class="s0">public </span><span class="s1">String getContrasena() { </span><span class="s0">return </span><span class="s1">contrasena; }</span>
+        <span class="s0">public </span><span class="s1">String getNombre() { </span><span class="s0">return </span><span class="s1">nombre; }</span>
+        <span class="s0">public </span><span class="s1">String getApellido() { </span><span class="s0">return </span><span class="s1">apellido; }</span>
+        <span class="s0">public </span><span class="s1">String getTelefono() { </span><span class="s0">return </span><span class="s1">telefono; }</span>
+        <span class="s0">public </span><span class="s1">String getCorreoElectronico() { </span><span class="s0">return </span><span class="s1">correoElectronico; }</span>
+
+        <span class="s0">public </span><span class="s1">Object[] toRow() {</span>
+            <span class="s0">return new </span><span class="s1">Object[]{nombreUsuario, nombre, apellido, telefono, correoElectronico};</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// Clase UsuarioManager</span>
+    <span class="s0">static class </span><span class="s1">UsuarioManager {</span>
+        <span class="s0">private static </span><span class="s1">UsuarioManager instance;</span>
+        <span class="s0">private </span><span class="s1">List&lt;Usuario&gt; usuarios;</span>
+
+        <span class="s0">private </span><span class="s1">UsuarioManager() {</span>
+            <span class="s1">usuarios = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;();</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public static </span><span class="s1">UsuarioManager getInstance() {</span>
+            <span class="s0">if </span><span class="s1">(instance == </span><span class="s0">null</span><span class="s1">) {</span>
+                <span class="s1">instance = </span><span class="s0">new </span><span class="s1">UsuarioManager();</span>
+            <span class="s1">}</span>
+            <span class="s0">return </span><span class="s1">instance;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public void </span><span class="s1">agregarUsuario(Usuario usuario) {</span>
+            <span class="s1">usuarios.add(usuario);</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public </span><span class="s1">Usuario buscarUsuario(String nombreUsuario, String contrasena) {</span>
+            <span class="s0">for </span><span class="s1">(Usuario usuario : usuarios) {</span>
+                <span class="s0">if </span><span class="s1">(usuario.getNombreUsuario().equals(nombreUsuario) &amp;&amp; usuario.getContrasena().equals(contrasena)) {</span>
+                    <span class="s0">return </span><span class="s1">usuario;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s0">return null</span><span class="s1">;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public </span><span class="s1">List&lt;Usuario&gt; getUsuarios() {</span>
+            <span class="s0">return </span><span class="s1">usuarios;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public boolean </span><span class="s1">eliminarUsuario(String nombreUsuario) {</span>
+            <span class="s0">return </span><span class="s1">usuarios.removeIf(usuario -&gt; usuario.getNombreUsuario().equals(nombreUsuario));</span>
+        <span class="s1">}</span>
+
+        <span class="s0">public boolean </span><span class="s1">actualizarUsuario(Usuario usuarioActualizado) {</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt; usuarios.size(); i++) {</span>
+                <span class="s1">Usuario usuario = usuarios.get(i);</span>
+                <span class="s0">if </span><span class="s1">(usuario.getNombreUsuario().equals(usuarioActualizado.getNombreUsuario())) {</span>
+                    <span class="s1">usuarios.set(i, usuarioActualizado);</span>
+                    <span class="s0">return true</span><span class="s1">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s0">return false</span><span class="s1">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// Interfaz de Inicio de Sesión</span>
+    <span class="s0">static class </span><span class="s1">IniciarSesion </span><span class="s0">extends </span><span class="s1">JFrame {</span>
+        <span class="s0">private </span><span class="s1">JTextField campoNombreUsuario;</span>
+        <span class="s0">private </span><span class="s1">JPasswordField campoContrasena;</span>
+
+        <span class="s0">public </span><span class="s1">IniciarSesion() {</span>
+            <span class="s1">setTitle(</span><span class="s4">&quot;Iniciar Sesión&quot;</span><span class="s1">);</span>
+            <span class="s1">setSize(</span><span class="s3">300</span><span class="s1">, </span><span class="s3">200</span><span class="s1">);</span>
+            <span class="s1">setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+            <span class="s1">setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">);</span>
+            <span class="s1">JPanel panel = </span><span class="s0">new </span><span class="s1">JPanel();</span>
+            <span class="s1">add(panel);</span>
+            <span class="s1">placeComponents(panel);</span>
+            <span class="s1">setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">}</span>
+
+        <span class="s0">private void </span><span class="s1">placeComponents(JPanel panel) {</span>
+            <span class="s1">panel.setLayout(</span><span class="s0">null</span><span class="s1">);</span>
+            <span class="s1">JLabel usuarioEtiqueta = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Usuario: &quot;</span><span class="s1">);</span>
+            <span class="s1">usuarioEtiqueta.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">20</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(usuarioEtiqueta);</span>
+
+            <span class="s1">campoNombreUsuario = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoNombreUsuario.setBounds(</span><span class="s3">100</span><span class="s1">, </span><span class="s3">20</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoNombreUsuario);</span>
+
+            <span class="s1">JLabel contrasenaEtiqueta = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Contraseña: &quot;</span><span class="s1">);</span>
+            <span class="s1">contrasenaEtiqueta.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">50</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(contrasenaEtiqueta);</span>
+
+            <span class="s1">campoContrasena = </span><span class="s0">new </span><span class="s1">JPasswordField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoContrasena.setBounds(</span><span class="s3">100</span><span class="s1">, </span><span class="s3">50</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoContrasena);</span>
+
+            <span class="s1">JButton botonLogin = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Entrar&quot;</span><span class="s1">);</span>
+            <span class="s1">botonLogin.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(botonLogin);</span>
+
+            <span class="s1">JButton botonRegistrar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Registrarse&quot;</span><span class="s1">);</span>
+            <span class="s1">botonRegistrar.setBounds(</span><span class="s3">100</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">120</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(botonRegistrar);</span>
+
+            <span class="s1">botonLogin.addActionListener(e -&gt; {</span>
+                <span class="s1">String nombreUsuario = campoNombreUsuario.getText();</span>
+                <span class="s1">String contrasena = </span><span class="s0">new </span><span class="s1">String(campoContrasena.getPassword());</span>
+                <span class="s1">Usuario usuario = UsuarioManager.getInstance().buscarUsuario(nombreUsuario, contrasena);</span>
+                <span class="s2">// Verificación de campos vacíos</span>
+                <span class="s0">if </span><span class="s1">(nombreUsuario.isEmpty() || contrasena.isEmpty()) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Debe ingresar su usuario y contraseña, si no está registrado debe registrarse.&quot;</span><span class="s1">);</span>
+                    <span class="s0">return</span><span class="s1">;</span>
+                <span class="s1">}</span>
+                <span class="s0">if </span><span class="s1">(usuario != </span><span class="s0">null</span><span class="s1">) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Inicio de sesión exitoso. ¡Bienvenido &quot; </span><span class="s1">+ usuario.getNombre() + </span><span class="s4">&quot;!&quot;</span><span class="s1">);</span>
+                    <span class="s1">dispose(); </span><span class="s2">// Cierra la ventana de inicio de sesión</span>
+                    <span class="s0">new </span><span class="s1">MarcoDeRegistro.GestionarUsuarios(); </span><span class="s2">// Abre la ventana para gestionar usuarios</span>
+                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Usuario o Contraseña incorrecto.&quot;</span><span class="s1">);</span>
+                <span class="s1">}</span>
+            <span class="s1">});</span>
+
+            <span class="s1">botonRegistrar.addActionListener(e -&gt; </span><span class="s0">new </span><span class="s1">MarcoDeRegistro());</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// Interfaz de Registro de Usuarios</span>
+    <span class="s0">static class </span><span class="s1">MarcoDeRegistro </span><span class="s0">extends </span><span class="s1">JFrame {</span>
+        <span class="s0">private </span><span class="s1">JTextField campoNombreUsuario;</span>
+        <span class="s0">private </span><span class="s1">JTextField campoNombres;</span>
+        <span class="s0">private </span><span class="s1">JTextField campoApellidos;</span>
+        <span class="s0">private </span><span class="s1">JTextField campoTelefono;</span>
+        <span class="s0">private </span><span class="s1">JTextField campoCorreoElectronico;</span>
+        <span class="s0">private </span><span class="s1">JPasswordField campoContrasena;</span>
+        <span class="s0">private </span><span class="s1">JPasswordField campoConfirmarContrasena;</span>
+
+        <span class="s0">public </span><span class="s1">MarcoDeRegistro() {</span>
+            <span class="s1">setTitle(</span><span class="s4">&quot;Registrarse&quot;</span><span class="s1">);</span>
+            <span class="s1">setSize(</span><span class="s3">400</span><span class="s1">, </span><span class="s3">300</span><span class="s1">);</span>
+            <span class="s1">setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+            <span class="s1">setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">);</span>
+
+            <span class="s1">JPanel panel = </span><span class="s0">new </span><span class="s1">JPanel();</span>
+            <span class="s1">add(panel);</span>
+            <span class="s1">placeComponents(panel);</span>
+            <span class="s1">setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+        <span class="s1">}</span>
+
+        <span class="s0">private void </span><span class="s1">placeComponents(JPanel panel) {</span>
+            <span class="s1">panel.setLayout(</span><span class="s0">null</span><span class="s1">);</span>
+            <span class="s1">JLabel etiquetaUsuario = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Usuario: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaUsuario.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">20</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaUsuario);</span>
+            <span class="s1">campoNombreUsuario = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoNombreUsuario.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">20</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoNombreUsuario);</span>
+
+            <span class="s1">JLabel etiquetaNombres = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Nombres: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaNombres.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">50</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaNombres);</span>
+
+            <span class="s1">campoNombres = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoNombres.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">50</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoNombres);</span>
+
+            <span class="s1">JLabel etiquetaApellidos = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Apellidos: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaApellidos.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaApellidos);</span>
+
+            <span class="s1">campoApellidos = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoApellidos.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoApellidos);</span>
+
+            <span class="s1">JLabel etiquetaTelefono = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Teléfono: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaTelefono.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">110</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaTelefono);</span>
+
+            <span class="s1">campoTelefono = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoTelefono.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">110</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoTelefono);</span>
+
+            <span class="s1">JLabel etiquetaCorreoElectronico = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Correo Electrónico: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaCorreoElectronico.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">140</span><span class="s1">, </span><span class="s3">150</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaCorreoElectronico);</span>
+
+            <span class="s1">campoCorreoElectronico = </span><span class="s0">new </span><span class="s1">JTextField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoCorreoElectronico.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">140</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoCorreoElectronico);</span>
+
+            <span class="s1">JLabel etiquetaContrasena = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Contraseña: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaContrasena.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">170</span><span class="s1">, </span><span class="s3">80</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaContrasena);</span>
+
+            <span class="s1">campoContrasena = </span><span class="s0">new </span><span class="s1">JPasswordField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoContrasena.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">170</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoContrasena);</span>
+
+            <span class="s1">JLabel etiquetaConfirmarContrasena = </span><span class="s0">new </span><span class="s1">JLabel(</span><span class="s4">&quot;Confirmar Contraseña: &quot;</span><span class="s1">);</span>
+            <span class="s1">etiquetaConfirmarContrasena.setBounds(</span><span class="s3">10</span><span class="s1">, </span><span class="s3">200</span><span class="s1">, </span><span class="s3">150</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(etiquetaConfirmarContrasena);</span>
+
+            <span class="s1">campoConfirmarContrasena = </span><span class="s0">new </span><span class="s1">JPasswordField(</span><span class="s3">20</span><span class="s1">);</span>
+            <span class="s1">campoConfirmarContrasena.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">200</span><span class="s1">, </span><span class="s3">165</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(campoConfirmarContrasena);</span>
+
+            <span class="s1">JButton botonRegistrar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Registrar&quot;</span><span class="s1">);</span>
+            <span class="s1">botonRegistrar.setBounds(</span><span class="s3">150</span><span class="s1">, </span><span class="s3">230</span><span class="s1">, </span><span class="s3">100</span><span class="s1">, </span><span class="s3">25</span><span class="s1">);</span>
+            <span class="s1">panel.add(botonRegistrar);</span>
+
+            <span class="s1">botonRegistrar.addActionListener(e -&gt; {</span>
+                <span class="s1">String nombreUsername = campoNombreUsuario.getText();</span>
+                <span class="s1">String nombres = campoNombres.getText();</span>
+                <span class="s1">String apellidos = campoApellidos.getText();</span>
+                <span class="s1">String telefono = campoTelefono.getText();</span>
+                <span class="s1">String correo = campoCorreoElectronico.getText();</span>
+                <span class="s1">String contrasena = </span><span class="s0">new </span><span class="s1">String(campoContrasena.getPassword());</span>
+                <span class="s1">String confirmar = </span><span class="s0">new </span><span class="s1">String(campoConfirmarContrasena.getPassword());</span>
+
+                <span class="s0">if </span><span class="s1">(nombreUsername.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() || correo.isEmpty() || contrasena.isEmpty() || confirmar.isEmpty()) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Todos los campos son obligatorios.&quot;</span><span class="s1">);</span>
+                    <span class="s0">return</span><span class="s1">;</span>
+                <span class="s1">}</span>
+
+                <span class="s0">if </span><span class="s1">(!contrasena.equals(confirmar)) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Las contraseñas no coinciden.&quot;</span><span class="s1">);</span>
+                    <span class="s0">return</span><span class="s1">;</span>
+                <span class="s1">}</span>
+
+                <span class="s1">Usuario nuevo = </span><span class="s0">new </span><span class="s1">Usuario(nombreUsername, contrasena, nombres, apellidos, telefono, correo);</span>
+                <span class="s1">UsuarioManager.getInstance().agregarUsuario(nuevo);</span>
+
+                <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">null</span><span class="s1">, </span><span class="s4">&quot;Registro exitoso.&quot;</span><span class="s1">);</span>
+
+                <span class="s1">dispose(); </span><span class="s2">// Cierra la ventana de registro</span>
+
+                <span class="s2">// Abre la ventana para gestionar usuarios después del registro</span>
+                <span class="s0">new </span><span class="s1">GestionarUsuarios();</span>
+            <span class="s1">});</span>
+        <span class="s1">}</span>
+
+        <span class="s2">// Ventana para gestionar usuarios</span>
+        <span class="s0">static class </span><span class="s1">GestionarUsuarios </span><span class="s0">extends </span><span class="s1">JFrame {</span>
+            <span class="s0">private </span><span class="s1">JTable tablaUsuarios;</span>
+            <span class="s0">private </span><span class="s1">DefaultTableModel modeloTabla;</span>
+
+            <span class="s0">public </span><span class="s1">GestionarUsuarios() {</span>
+                <span class="s1">setTitle(</span><span class="s4">&quot;Gestionar Usuarios&quot;</span><span class="s1">);</span>
+                <span class="s1">setSize(</span><span class="s3">600</span><span class="s1">, </span><span class="s3">400</span><span class="s1">);</span>
+                <span class="s1">setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+                <span class="s1">setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">);</span>
+
+                <span class="s1">modeloTabla = </span><span class="s0">new </span><span class="s1">DefaultTableModel(</span><span class="s0">new </span><span class="s1">Object[]{</span><span class="s4">&quot;Nombre de Usuario&quot;</span><span class="s1">, </span><span class="s4">&quot;Nombre&quot;</span><span class="s1">, </span><span class="s4">&quot;Apellido&quot;</span><span class="s1">, </span><span class="s4">&quot;Teléfono&quot;</span><span class="s1">, </span><span class="s4">&quot;Correo Electrónico&quot;</span><span class="s1">}, </span><span class="s3">0</span><span class="s1">);</span>
+                <span class="s1">tablaUsuarios = </span><span class="s0">new </span><span class="s1">JTable(modeloTabla);</span>
+
+                <span class="s1">JScrollPane scrollPane = </span><span class="s0">new </span><span class="s1">JScrollPane(tablaUsuarios);</span>
+
+                <span class="s1">JButton botonAgregar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Agregar Usuario&quot;</span><span class="s1">);</span>
+                <span class="s1">JButton botonModificar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Modificar Usuario&quot;</span><span class="s1">);</span>
+                <span class="s1">JButton botonEliminar = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Eliminar Usuario&quot;</span><span class="s1">);</span>
+
+                <span class="s1">botonAgregar.addActionListener(e -&gt; agregarNuevoUsuario());</span>
+                <span class="s1">botonModificar.addActionListener(e -&gt; modificarSeleccionado());</span>
+                <span class="s1">botonEliminar.addActionListener(e -&gt; eliminarSeleccionado());</span>
+
+                <span class="s1">JButton botonCerrarSesion = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Cerrar Sesión&quot;</span><span class="s1">);</span>
+                <span class="s1">botonCerrarSesion.addActionListener(e -&gt; {</span>
+                    <span class="s1">dispose(); </span><span class="s2">// Cierra la ventana actual</span>
+                    <span class="s0">new </span><span class="s1">IniciarSesion(); </span><span class="s2">// Regresa a la ventana de login</span>
+                <span class="s1">});</span>
+
+                <span class="s2">// Agregar el botón Volver</span>
+                <span class="s1">JButton botonVolver = </span><span class="s0">new </span><span class="s1">JButton(</span><span class="s4">&quot;Volver&quot;</span><span class="s1">);</span>
+                <span class="s1">botonVolver.addActionListener(e -&gt; {</span>
+                    <span class="s1">dispose(); </span><span class="s2">// Cierra la ventana actual</span>
+                    <span class="s0">new </span><span class="s1">IniciarSesion(); </span><span class="s2">// Regresa a la ventana de login</span>
+                <span class="s1">});</span>
+
+                <span class="s1">JPanel panelBotones = </span><span class="s0">new </span><span class="s1">JPanel();</span>
+                <span class="s1">panelBotones.add(botonAgregar);</span>
+                <span class="s1">panelBotones.add(botonModificar);</span>
+                <span class="s1">panelBotones.add(botonEliminar);</span>
+
+                <span class="s1">add(scrollPane, BorderLayout.CENTER);</span>
+                <span class="s1">add(panelBotones, BorderLayout.SOUTH);</span>
+
+                <span class="s1">cargarUsuariosEnTabla();</span>
+
+                <span class="s1">setVisible(</span><span class="s0">true</span><span class="s1">);</span>
+            <span class="s1">}</span>
+
+            <span class="s0">private void </span><span class="s1">cargarUsuariosEnTabla() {</span>
+                <span class="s1">modeloTabla.setRowCount(</span><span class="s3">0</span><span class="s1">); </span><span class="s2">// Limpiar la tabla antes de cargar</span>
+
+                <span class="s1">List&lt;Usuario&gt; usuarios = UsuarioManager.getInstance().getUsuarios();</span>
+
+                <span class="s0">for </span><span class="s1">(Usuario usuario : usuarios) {</span>
+                    <span class="s1">modeloTabla.addRow(usuario.toRow());</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">private void </span><span class="s1">agregarNuevoUsuario() {</span>
+                <span class="s2">// Lógica para agregar un nuevo usuario</span>
+                <span class="s1">JTextField campoNombreUsuario = </span><span class="s0">new </span><span class="s1">JTextField();</span>
+                <span class="s1">JTextField campoNombres = </span><span class="s0">new </span><span class="s1">JTextField();</span>
+                <span class="s1">JTextField campoApellidos = </span><span class="s0">new </span><span class="s1">JTextField();</span>
+                <span class="s1">JTextField campoTelefono = </span><span class="s0">new </span><span class="s1">JTextField();</span>
+                <span class="s1">JTextField campoCorreoElectronico = </span><span class="s0">new </span><span class="s1">JTextField();</span>
+                <span class="s1">JPasswordField campoContrasena = </span><span class="s0">new </span><span class="s1">JPasswordField();</span>
+
+                <span class="s1">Object[] message = {</span>
+                        <span class="s4">&quot;Nombre de Usuario:&quot;</span><span class="s1">, campoNombreUsuario,</span>
+                        <span class="s4">&quot;Nombres:&quot;</span><span class="s1">, campoNombres,</span>
+                        <span class="s4">&quot;Apellidos:&quot;</span><span class="s1">, campoApellidos,</span>
+                        <span class="s4">&quot;Teléfono:&quot;</span><span class="s1">, campoTelefono,</span>
+                        <span class="s4">&quot;Correo Electrónico:&quot;</span><span class="s1">, campoCorreoElectronico,</span>
+                        <span class="s4">&quot;Contraseña:&quot;</span><span class="s1">, campoContrasena</span>
+                <span class="s1">};</span>
+
+                <span class="s0">int </span><span class="s1">option = JOptionPane.showConfirmDialog(</span><span class="s0">this</span><span class="s1">, message,</span>
+                        <span class="s4">&quot;Agregar Nuevo Usuario&quot;</span><span class="s1">, JOptionPane.OK_CANCEL_OPTION);</span>
+
+                <span class="s0">if </span><span class="s1">(option == JOptionPane.OK_OPTION) {</span>
+                    <span class="s1">Usuario nuevoUsuario = </span><span class="s0">new </span><span class="s1">Usuario(</span>
+                            <span class="s1">campoNombreUsuario.getText(),</span>
+                            <span class="s0">new </span><span class="s1">String(campoContrasena.getPassword()),</span>
+                            <span class="s1">campoNombres.getText(),</span>
+                            <span class="s1">campoApellidos.getText(),</span>
+                            <span class="s1">campoTelefono.getText(),</span>
+                            <span class="s1">campoCorreoElectronico.getText()</span>
+                    <span class="s1">);</span>
+                    <span class="s1">UsuarioManager.getInstance().agregarUsuario(nuevoUsuario);</span>
+                    <span class="s1">cargarUsuariosEnTabla();</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                            <span class="s4">&quot;Nuevo usuario agregado exitosamente.&quot;</span><span class="s1">);</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">private void </span><span class="s1">modificarSeleccionado() {</span>
+                <span class="s0">int </span><span class="s1">filaSeleccionada = tablaUsuarios.getSelectedRow();</span>
+                <span class="s0">if </span><span class="s1">(filaSeleccionada == -</span><span class="s3">1</span><span class="s1">) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                            <span class="s4">&quot;Por favor selecciona un usuario para modificar.&quot;</span><span class="s1">);</span>
+                    <span class="s0">return</span><span class="s1">;</span>
+                <span class="s1">}</span>
+
+                <span class="s2">// Obtener el usuario seleccionado</span>
+                <span class="s1">String nombreDeUsuarioActualizado =</span>
+                        <span class="s1">modeloTabla.getValueAt(filaSeleccionada, </span><span class="s3">0</span><span class="s1">).toString();</span>
+
+                <span class="s2">// Crear campos para editar los datos del usuario</span>
+                <span class="s1">JTextField campoNombres = </span><span class="s0">new </span><span class="s1">JTextField(modeloTabla.getValueAt(filaSeleccionada, </span><span class="s3">1</span><span class="s1">).toString());</span>
+                <span class="s1">JTextField campoApellidos = </span><span class="s0">new </span><span class="s1">JTextField(modeloTabla.getValueAt(filaSeleccionada, </span><span class="s3">2</span><span class="s1">).toString());</span>
+                <span class="s1">JTextField campoTelefono = </span><span class="s0">new </span><span class="s1">JTextField(modeloTabla.getValueAt(filaSeleccionada, </span><span class="s3">3</span><span class="s1">).toString());</span>
+                <span class="s1">JTextField campoCorreoElectronico =</span>
+                        <span class="s0">new </span><span class="s1">JTextField(modeloTabla.getValueAt(filaSeleccionada, </span><span class="s3">4</span><span class="s1">).toString());</span>
+
+                <span class="s1">Object[] messageEditando =</span>
+                        <span class="s1">{</span><span class="s4">&quot;Nombres:&quot;</span><span class="s1">, campoNombres,</span>
+                                <span class="s4">&quot;Apellidos:&quot;</span><span class="s1">, campoApellidos,</span>
+                                <span class="s4">&quot;Teléfono:&quot;</span><span class="s1">, campoTelefono,</span>
+                                <span class="s4">&quot;Correo Electrónico:&quot;</span><span class="s1">, campoCorreoElectronico};</span>
+
+                <span class="s0">int </span><span class="s1">optionEditando =</span>
+                        <span class="s1">JOptionPane.showConfirmDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s1">messageEditando,</span>
+                                <span class="s4">&quot;Modificar Usuario&quot;</span><span class="s1">,</span>
+                                <span class="s1">JOptionPane.OK_CANCEL_OPTION);</span>
+
+                <span class="s0">if </span><span class="s1">(optionEditando == JOptionPane.OK_OPTION) {</span>
+
+                    <span class="s2">// Actualizar el usuario en el manager</span>
+                    <span class="s1">Usuario usuarioActualizado =</span>
+                            <span class="s0">new </span><span class="s1">Usuario(nombreDeUsuarioActualizado,</span>
+                                    <span class="s4">&quot;&quot;</span><span class="s1">, </span><span class="s2">// No se modifica la contraseña aquí</span>
+                                    <span class="s1">campoNombres.getText(),</span>
+                                    <span class="s1">campoApellidos.getText(),</span>
+                                    <span class="s1">campoTelefono.getText(),</span>
+                                    <span class="s1">campoCorreoElectronico.getText());</span>
+
+                    <span class="s0">boolean </span><span class="s1">actualizado =</span>
+                            <span class="s1">UsuarioManager.getInstance().actualizarUsuario(usuarioActualizado);</span>
+
+                    <span class="s0">if </span><span class="s1">(actualizado) {</span>
+                        <span class="s1">cargarUsuariosEnTabla();</span>
+                        <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s4">&quot;Datos del usuario actualizados exitosamente.&quot;</span><span class="s1">);</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s4">&quot;Error al actualizar el usuario.&quot;</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s0">private void </span><span class="s1">eliminarSeleccionado() {</span>
+                <span class="s0">int </span><span class="s1">filaSeleccionada =</span>
+                        <span class="s1">tablaUsuarios.getSelectedRow();</span>
+                <span class="s0">if </span><span class="s1">(filaSeleccionada == -</span><span class="s3">1</span><span class="s1">) {</span>
+                    <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                            <span class="s4">&quot;Por favor selecciona un usuario para eliminar.&quot;</span><span class="s1">);</span>
+                    <span class="s0">return</span><span class="s1">;</span>
+                <span class="s1">}</span>
+
+                <span class="s2">// Obtener el nombre de usuario a eliminar</span>
+                <span class="s1">String nombreDeUsuarioAEliminar =</span>
+                        <span class="s1">modeloTabla.getValueAt(filaSeleccionada,</span>
+                                <span class="s3">0</span><span class="s1">).toString();</span>
+
+                <span class="s0">int </span><span class="s1">confirmacion =</span>
+                        <span class="s1">JOptionPane.showConfirmDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s4">&quot;¿Está seguro que desea eliminar al usuario &quot;</span>
+                                        <span class="s1">+ nombreDeUsuarioAEliminar + </span><span class="s4">&quot;?&quot;</span><span class="s1">,</span>
+                                <span class="s4">&quot;Confirmación&quot;</span><span class="s1">,</span>
+                                <span class="s1">JOptionPane.YES_NO_OPTION);</span>
+
+                <span class="s0">if </span><span class="s1">(confirmacion == JOptionPane.YES_OPTION) {</span>
+
+                    <span class="s0">boolean </span><span class="s1">eliminado =</span>
+                            <span class="s1">UsuarioManager.getInstance().eliminarUsuario(nombreDeUsuarioAEliminar);</span>
+
+                    <span class="s0">if </span><span class="s1">(eliminado) {</span>
+                        <span class="s1">cargarUsuariosEnTabla();</span>
+                        <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s4">&quot;El usuario ha sido eliminado.&quot;</span><span class="s1">);</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">JOptionPane.showMessageDialog(</span><span class="s0">this</span><span class="s1">,</span>
+                                <span class="s4">&quot;Error al eliminar el usuario.&quot;</span><span class="s1">);</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>
