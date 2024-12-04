@@ -1,0 +1,460 @@
+package Almacen;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+class Main {
+    // Clase Usuario
+    static class Usuario {
+        private String nombreUsuario;
+        private String contrasena;
+        private String nombre;
+        private String apellido;
+        private String telefono;
+        private String correoElectronico;
+
+        public Usuario(String nombreUsuario, String contrasena, String nombre, String apellido, String telefono, String correoElectronico) {
+            this.nombreUsuario = nombreUsuario;
+            this.contrasena = contrasena;
+            this.nombre = nombre;
+            this.apellido = apellido;
+            this.telefono = telefono;
+            this.correoElectronico = correoElectronico;
+        }
+
+        // Getters
+        public String getNombreUsuario() { return nombreUsuario; }
+        public String getContrasena() { return contrasena; }
+        public String getNombre() { return nombre; }
+        public String getApellido() { return apellido; }
+        public String getTelefono() { return telefono; }
+        public String getCorreoElectronico() { return correoElectronico; }
+
+        public Object[] toRow() {
+            return new Object[]{nombreUsuario, nombre, apellido, telefono, correoElectronico};
+        }
+    }
+
+    // Clase UsuarioManager
+    static class UsuarioManager {
+        private static UsuarioManager instance;
+        private List<Usuario> usuarios;
+
+        private UsuarioManager() {
+            usuarios = new ArrayList<>();
+        }
+
+        public static UsuarioManager getInstance() {
+            if (instance == null) {
+                instance = new UsuarioManager();
+            }
+            return instance;
+        }
+
+        public void agregarUsuario(Usuario usuario) {
+            usuarios.add(usuario);
+        }
+
+        public Usuario buscarUsuario(String nombreUsuario, String contrasena) {
+            for (Usuario usuario : usuarios) {
+                if (usuario.getNombreUsuario().equals(nombreUsuario) && usuario.getContrasena().equals(contrasena)) {
+                    return usuario;
+                }
+            }
+            return null;
+        }
+
+        public List<Usuario> getUsuarios() {
+            return usuarios;
+        }
+
+        public boolean eliminarUsuario(String nombreUsuario) {
+            return usuarios.removeIf(usuario -> usuario.getNombreUsuario().equals(nombreUsuario));
+        }
+
+        public boolean actualizarUsuario(Usuario usuarioActualizado) {
+            for (int i = 0; i < usuarios.size(); i++) {
+                Usuario usuario = usuarios.get(i);
+                if (usuario.getNombreUsuario().equals(usuarioActualizado.getNombreUsuario())) {
+                    usuarios.set(i, usuarioActualizado);
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    // Interfaz de Inicio de Sesión
+    static class IniciarSesion extends JFrame {
+        private JTextField campoNombreUsuario;
+        private JPasswordField campoContrasena;
+
+        public IniciarSesion() {
+            setTitle("Iniciar Sesión");
+            setSize(300, 200);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            JPanel panel = new JPanel();
+            add(panel);
+            placeComponents(panel);
+            setVisible(true);
+        }
+
+        private void placeComponents(JPanel panel) {
+            panel.setLayout(null);
+            JLabel usuarioEtiqueta = new JLabel("Usuario: ");
+            usuarioEtiqueta.setBounds(10, 20, 80, 25);
+            panel.add(usuarioEtiqueta);
+
+            campoNombreUsuario = new JTextField(20);
+            campoNombreUsuario.setBounds(100, 20, 165, 25);
+            panel.add(campoNombreUsuario);
+
+            JLabel contrasenaEtiqueta = new JLabel("Contraseña: ");
+            contrasenaEtiqueta.setBounds(10, 50, 80, 25);
+            panel.add(contrasenaEtiqueta);
+
+            campoContrasena = new JPasswordField(20);
+            campoContrasena.setBounds(100, 50, 165, 25);
+            panel.add(campoContrasena);
+
+            JButton botonLogin = new JButton("Entrar");
+            botonLogin.setBounds(10, 80, 80, 25);
+            panel.add(botonLogin);
+
+            JButton botonRegistrar = new JButton("Registrarse");
+            botonRegistrar.setBounds(100, 80, 120, 25);
+            panel.add(botonRegistrar);
+
+            botonLogin.addActionListener(e -> {
+                String nombreUsuario = campoNombreUsuario.getText();
+                String contrasena = new String(campoContrasena.getPassword());
+                Usuario usuario = UsuarioManager.getInstance().buscarUsuario(nombreUsuario, contrasena);
+                // Verificación de campos vacíos
+                if (nombreUsuario.isEmpty() || contrasena.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar su usuario y contraseña, si no está registrado debe registrarse.");
+                    return;
+                }
+                if (usuario != null) {
+                    JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso. ¡Bienvenido " + usuario.getNombre() + "!");
+                    dispose(); // Cierra la ventana de inicio de sesión
+                    new MarcoDeRegistro.GestionarUsuarios(); // Abre la ventana para gestionar usuarios
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuario o Contraseña incorrecto.");
+                }
+            });
+
+            botonRegistrar.addActionListener(e -> new MarcoDeRegistro());
+        }
+    }
+
+    // Interfaz de Registro de Usuarios
+    static class MarcoDeRegistro extends JFrame {
+        private JTextField campoNombreUsuario;
+        private JTextField campoNombres;
+        private JTextField campoApellidos;
+        private JTextField campoTelefono;
+        private JTextField campoCorreoElectronico;
+        private JPasswordField campoContrasena;
+        private JPasswordField campoConfirmarContrasena;
+
+        public MarcoDeRegistro() {
+            setTitle("Registrarse");
+            setSize(400, 300);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+
+            JPanel panel = new JPanel();
+            add(panel);
+            placeComponents(panel);
+            setVisible(true);
+        }
+
+        private void placeComponents(JPanel panel) {
+            panel.setLayout(null);
+            JLabel etiquetaUsuario = new JLabel("Usuario: ");
+            etiquetaUsuario.setBounds(10, 20, 80, 25);
+            panel.add(etiquetaUsuario);
+            campoNombreUsuario = new JTextField(20);
+            campoNombreUsuario.setBounds(150, 20, 165, 25);
+            panel.add(campoNombreUsuario);
+
+            JLabel etiquetaNombres = new JLabel("Nombres: ");
+            etiquetaNombres.setBounds(10, 50, 80, 25);
+            panel.add(etiquetaNombres);
+
+            campoNombres = new JTextField(20);
+            campoNombres.setBounds(150, 50, 165, 25);
+            panel.add(campoNombres);
+
+            JLabel etiquetaApellidos = new JLabel("Apellidos: ");
+            etiquetaApellidos.setBounds(10, 80, 80, 25);
+            panel.add(etiquetaApellidos);
+
+            campoApellidos = new JTextField(20);
+            campoApellidos.setBounds(150, 80, 165, 25);
+            panel.add(campoApellidos);
+
+            JLabel etiquetaTelefono = new JLabel("Teléfono: ");
+            etiquetaTelefono.setBounds(10, 110, 80, 25);
+            panel.add(etiquetaTelefono);
+
+            campoTelefono = new JTextField(20);
+            campoTelefono.setBounds(150, 110, 165, 25);
+            panel.add(campoTelefono);
+
+            JLabel etiquetaCorreoElectronico = new JLabel("Correo Electrónico: ");
+            etiquetaCorreoElectronico.setBounds(10, 140, 150, 25);
+            panel.add(etiquetaCorreoElectronico);
+
+            campoCorreoElectronico = new JTextField(20);
+            campoCorreoElectronico.setBounds(150, 140, 165, 25);
+            panel.add(campoCorreoElectronico);
+
+            JLabel etiquetaContrasena = new JLabel("Contraseña: ");
+            etiquetaContrasena.setBounds(10, 170, 80, 25);
+            panel.add(etiquetaContrasena);
+
+            campoContrasena = new JPasswordField(20);
+            campoContrasena.setBounds(150, 170, 165, 25);
+            panel.add(campoContrasena);
+
+            JLabel etiquetaConfirmarContrasena = new JLabel("Confirmar Contraseña: ");
+            etiquetaConfirmarContrasena.setBounds(10, 200, 150, 25);
+            panel.add(etiquetaConfirmarContrasena);
+
+            campoConfirmarContrasena = new JPasswordField(20);
+            campoConfirmarContrasena.setBounds(150, 200, 165, 25);
+            panel.add(campoConfirmarContrasena);
+
+            JButton botonRegistrar = new JButton("Registrar");
+            botonRegistrar.setBounds(150, 230, 100, 25);
+            panel.add(botonRegistrar);
+
+            botonRegistrar.addActionListener(e -> {
+                String nombreUsername = campoNombreUsuario.getText();
+                String nombres = campoNombres.getText();
+                String apellidos = campoApellidos.getText();
+                String telefono = campoTelefono.getText();
+                String correo = campoCorreoElectronico.getText();
+                String contrasena = new String(campoContrasena.getPassword());
+                String confirmar = new String(campoConfirmarContrasena.getPassword());
+
+                if (nombreUsername.isEmpty() || nombres.isEmpty() || apellidos.isEmpty() || telefono.isEmpty() || correo.isEmpty() || contrasena.isEmpty() || confirmar.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.");
+                    return;
+                }
+
+                if (!contrasena.equals(confirmar)) {
+                    JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden.");
+                    return;
+                }
+
+                Usuario nuevo = new Usuario(nombreUsername, contrasena, nombres, apellidos, telefono, correo);
+                UsuarioManager.getInstance().agregarUsuario(nuevo);
+
+                JOptionPane.showMessageDialog(null, "Registro exitoso.");
+
+                dispose(); // Cierra la ventana de registro
+
+                // Abre la ventana para gestionar usuarios después del registro
+                new GestionarUsuarios();
+            });
+        }
+
+        // Ventana para gestionar usuarios
+        static class GestionarUsuarios extends JFrame {
+            private JTable tablaUsuarios;
+            private DefaultTableModel modeloTabla;
+
+            public GestionarUsuarios() {
+                setTitle("Gestionar Usuarios");
+                setSize(600, 400);
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                setLocationRelativeTo(null);
+
+                modeloTabla = new DefaultTableModel(new Object[]{"Nombre de Usuario", "Nombre", "Apellido", "Teléfono", "Correo Electrónico"}, 0);
+                tablaUsuarios = new JTable(modeloTabla);
+
+                JScrollPane scrollPane = new JScrollPane(tablaUsuarios);
+
+                JButton botonAgregar = new JButton("Agregar Usuario");
+                JButton botonModificar = new JButton("Modificar Usuario");
+                JButton botonEliminar = new JButton("Eliminar Usuario");
+
+                botonAgregar.addActionListener(e -> agregarNuevoUsuario());
+                botonModificar.addActionListener(e -> modificarSeleccionado());
+                botonEliminar.addActionListener(e -> eliminarSeleccionado());
+
+                JButton botonCerrarSesion = new JButton("Cerrar Sesión");
+                botonCerrarSesion.addActionListener(e -> {
+                    dispose(); // Cierra la ventana actual
+                    new IniciarSesion(); // Regresa a la ventana de login
+                });
+
+                // Agregar el botón Volver
+                JButton botonVolver = new JButton("Volver");
+                botonVolver.addActionListener(e -> {
+                    dispose(); // Cierra la ventana actual
+                    new IniciarSesion(); // Regresa a la ventana de login
+                });
+
+                JPanel panelBotones = new JPanel();
+                panelBotones.add(botonAgregar);
+                panelBotones.add(botonModificar);
+                panelBotones.add(botonEliminar);
+
+                add(scrollPane, BorderLayout.CENTER);
+                add(panelBotones, BorderLayout.SOUTH);
+
+                cargarUsuariosEnTabla();
+
+                setVisible(true);
+            }
+
+            private void cargarUsuariosEnTabla() {
+                modeloTabla.setRowCount(0); // Limpiar la tabla antes de cargar
+
+                List<Usuario> usuarios = UsuarioManager.getInstance().getUsuarios();
+
+                for (Usuario usuario : usuarios) {
+                    modeloTabla.addRow(usuario.toRow());
+                }
+            }
+
+            private void agregarNuevoUsuario() {
+                // Lógica para agregar un nuevo usuario
+                JTextField campoNombreUsuario = new JTextField();
+                JTextField campoNombres = new JTextField();
+                JTextField campoApellidos = new JTextField();
+                JTextField campoTelefono = new JTextField();
+                JTextField campoCorreoElectronico = new JTextField();
+                JPasswordField campoContrasena = new JPasswordField();
+
+                Object[] message = {
+                        "Nombre de Usuario:", campoNombreUsuario,
+                        "Nombres:", campoNombres,
+                        "Apellidos:", campoApellidos,
+                        "Teléfono:", campoTelefono,
+                        "Correo Electrónico:", campoCorreoElectronico,
+                        "Contraseña:", campoContrasena
+                };
+
+                int option = JOptionPane.showConfirmDialog(this, message,
+                        "Agregar Nuevo Usuario", JOptionPane.OK_CANCEL_OPTION);
+
+                if (option == JOptionPane.OK_OPTION) {
+                    Usuario nuevoUsuario = new Usuario(
+                            campoNombreUsuario.getText(),
+                            new String(campoContrasena.getPassword()),
+                            campoNombres.getText(),
+                            campoApellidos.getText(),
+                            campoTelefono.getText(),
+                            campoCorreoElectronico.getText()
+                    );
+                    UsuarioManager.getInstance().agregarUsuario(nuevoUsuario);
+                    cargarUsuariosEnTabla();
+                    JOptionPane.showMessageDialog(this,
+                            "Nuevo usuario agregado exitosamente.");
+                }
+            }
+
+            private void modificarSeleccionado() {
+                int filaSeleccionada = tablaUsuarios.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    JOptionPane.showMessageDialog(this,
+                            "Por favor selecciona un usuario para modificar.");
+                    return;
+                }
+
+                // Obtener el usuario seleccionado
+                String nombreDeUsuarioActualizado =
+                        modeloTabla.getValueAt(filaSeleccionada, 0).toString();
+
+                // Crear campos para editar los datos del usuario
+                JTextField campoNombres = new JTextField(modeloTabla.getValueAt(filaSeleccionada, 1).toString());
+                JTextField campoApellidos = new JTextField(modeloTabla.getValueAt(filaSeleccionada, 2).toString());
+                JTextField campoTelefono = new JTextField(modeloTabla.getValueAt(filaSeleccionada, 3).toString());
+                JTextField campoCorreoElectronico =
+                        new JTextField(modeloTabla.getValueAt(filaSeleccionada, 4).toString());
+
+                Object[] messageEditando =
+                        {"Nombres:", campoNombres,
+                                "Apellidos:", campoApellidos,
+                                "Teléfono:", campoTelefono,
+                                "Correo Electrónico:", campoCorreoElectronico};
+
+                int optionEditando =
+                        JOptionPane.showConfirmDialog(this,
+                                messageEditando,
+                                "Modificar Usuario",
+                                JOptionPane.OK_CANCEL_OPTION);
+
+                if (optionEditando == JOptionPane.OK_OPTION) {
+
+                    // Actualizar el usuario en el manager
+                    Usuario usuarioActualizado =
+                            new Usuario(nombreDeUsuarioActualizado,
+                                    "", // No se modifica la contraseña aquí
+                                    campoNombres.getText(),
+                                    campoApellidos.getText(),
+                                    campoTelefono.getText(),
+                                    campoCorreoElectronico.getText());
+
+                    boolean actualizado =
+                            UsuarioManager.getInstance().actualizarUsuario(usuarioActualizado);
+
+                    if (actualizado) {
+                        cargarUsuariosEnTabla();
+                        JOptionPane.showMessageDialog(this,
+                                "Datos del usuario actualizados exitosamente.");
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Error al actualizar el usuario.");
+                    }
+                }
+            }
+
+            private void eliminarSeleccionado() {
+                int filaSeleccionada =
+                        tablaUsuarios.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    JOptionPane.showMessageDialog(this,
+                            "Por favor selecciona un usuario para eliminar.");
+                    return;
+                }
+
+                // Obtener el nombre de usuario a eliminar
+                String nombreDeUsuarioAEliminar =
+                        modeloTabla.getValueAt(filaSeleccionada,
+                                0).toString();
+
+                int confirmacion =
+                        JOptionPane.showConfirmDialog(this,
+                                "¿Está seguro que desea eliminar al usuario "
+                                        + nombreDeUsuarioAEliminar + "?",
+                                "Confirmación",
+                                JOptionPane.YES_NO_OPTION);
+
+                if (confirmacion == JOptionPane.YES_OPTION) {
+
+                    boolean eliminado =
+                            UsuarioManager.getInstance().eliminarUsuario(nombreDeUsuarioAEliminar);
+
+                    if (eliminado) {
+                        cargarUsuariosEnTabla();
+                        JOptionPane.showMessageDialog(this,
+                                "El usuario ha sido eliminado.");
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Error al eliminar el usuario.");
+                    }
+                }
+            }
+        }
+    }
+}
+

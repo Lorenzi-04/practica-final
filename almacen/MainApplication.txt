@@ -1,0 +1,35 @@
+package Almacen;
+
+public class MainApplication {
+    public static void main(String[] args) {
+        // Menú inicial para elegir entre las funcionalidades
+        String[] opciones = {"Gestión de Usuarios", "Gestión de Productos", "Salir"};
+        int seleccion = javax.swing.JOptionPane.showOptionDialog(
+                null,
+                "Seleccione una opción para continuar:",
+                "Inicio",
+                javax.swing.JOptionPane.DEFAULT_OPTION,
+                javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
+
+        switch (seleccion) {
+            case 0:
+                // Iniciar la interfaz de gestión de usuarios (inicio de sesión)
+                new Main.IniciarSesion();
+                break;
+            case 1:
+                // Abrir directamente la gestión de productos
+                new GestionProductos().setVisible(true);
+                break;
+            case 2:
+                // Salir del programa
+                System.exit(0);
+                break;
+            default:
+                System.exit(0);
+        }
+    }
+}
